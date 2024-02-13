@@ -301,14 +301,15 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
                 # print(tokenizer)
                 if 'moe' in model_name.lower():
-                    assert not load_8bit and not load_4bit  # FIXME
+                    # assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                        #  dtype=torch.half,
+                                                         dtype=torch.int8,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=True)
                     model = ds_engine.module
@@ -320,14 +321,14 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 tokenizer = Arcade100kTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
                 # print(tokenizer)
                 if 'moe' in model_name.lower():
-                    assert not load_8bit and not load_4bit  # FIXME
+                    # assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAStablelmForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                         dtype=torch.int8,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=True)
                     model = ds_engine.module
