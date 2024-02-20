@@ -40,7 +40,10 @@ from moellava.model import *
 from moellava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN, \
     DEFAULT_VID_END_TOKEN, DEFAULT_VID_START_TOKEN, DEFAULT_VIDEO_PATCH_TOKEN
 from moellava.model.language_model.qwen.tokenization_qwen import QWenTokenizer
+import numpy as np
 
+
+PORT = np.random.randint(0,65555)
 
 def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda", padding_side="right", **kwargs):
     kwargs = {"device_map": device_map, **kwargs}
@@ -162,7 +165,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 if getattr(cfg_pretrained, 'moe_enable', False):
                     model = EvalMoELLaVAMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port = PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -178,7 +181,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 if getattr(cfg_pretrained, 'moe_enable', False):
                     model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -197,7 +200,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 if getattr(cfg_pretrained, 'moe_enable', False):
                     model = EvalMoELLaVAStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -214,7 +217,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 if getattr(cfg_pretrained, 'moe_enable', False):
                     model = EvalMoELLaVAQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -235,7 +238,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 if getattr(cfg_pretrained, 'moe_enable', False):
                     model = EvalMoELLaVALlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -263,7 +266,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAQWenForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -286,7 +289,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAMistralForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -304,7 +307,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -324,7 +327,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVAStablelmForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
@@ -341,7 +344,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     assert not load_8bit and not load_4bit  # FIXME
                     model = EvalMoELLaVALlamaForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                     import deepspeed
-                    deepspeed.init_distributed(dist_backend='nccl')
+                    deepspeed.init_distributed(dist_backend='nccl', distributed_port=PORT)
                     print(model)
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
